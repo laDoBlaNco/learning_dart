@@ -181,10 +181,10 @@ void main() {
   print('');
 
   print('TYPE TEST OPERATORS:');
-  print('kevin' is String);
+  // print('kevin' is String);
   print('kevin' is int);
   print('kevin' is! int);
-  print('kevin' is! String);
+  // print('kevin' is! String);
   print('');
 
   print('ASSIGNMENT OPERATORS');
@@ -193,7 +193,7 @@ void main() {
   print(kevin); // null
   print(odalis); // lorenzo
   kevin ??= 'whiteside'; // since is null it takes the new value
-  odalis ??= 'whiteside'; // since its not null it doesn't take the new value
+  // odalis ??= 'whiteside'; // since its not null it doesn't take the new value
   print(kevin); // now whiteside
   print(odalis); // still lorenzo
 
@@ -218,9 +218,9 @@ void main() {
   print('');
 
   print('CONDITIONAL EXPRESSIONS - OPERATORS');
-  bool isPublic = false;
-  var visiblity = isPublic ? 'public' : 'private';
-  print(visiblity);
+  // bool isPublic = false;
+  // var visiblity = isPublic ? 'public' : 'private';
+  // print(visiblity);
   String? name; // this is null
   String playerName(String? name) => name ?? 'Guest'; // here we use ??
   print(playerName(name)); // so it returns 'Guest'
@@ -240,7 +240,7 @@ void main() {
 
   print('CASCADE NOTION:');
   var paint = Paint()
-    ?..color = 'black'
+    // ?..color = 'black'
     ..strokeCap = 'round'
     ..strokeWidth = 5.0;
   print(paint);
