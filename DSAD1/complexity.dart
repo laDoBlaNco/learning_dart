@@ -1,6 +1,6 @@
 /*DSAD - Chapter 2 - Complexity
  * 
- * Scalability means different things depending on the context. In DBase its about along
+ * Scalability means different things depending on the context. In DBase its about how long
  * it takes to retrieve and save data and with Architecture its about how easy it is to
  * make changes to the system. For algorithms its about performance in terms of execution
  * time and memory usage. BIG O NOTATION
