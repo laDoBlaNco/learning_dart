@@ -3,7 +3,8 @@ This repository is dedicated to my learning of Dart and in the longer run Flutte
 
 ## PURPOSE
 
-I've decided to dedicate my time to the Google technologies of Go, Dart, and Flutter. Staying 
-in the Google family I feel I'll get a more rounded out focus for where I want to end up.
-With Go as my low-level, back-endy, embeddable, systems language and Dart and Flutter as my
-UI, Mobile, also embeddy, Web language, I'll be good to go on all fronts. 
+I'm coming back to Dart/Flutter after a long while because I've determined that the way
+the market is turning, I don't want a job in tech, I want an opportunity in tech. That means
+going solo indie dev and mastering something that will take me where I want to be. As a solo
+dev, a real WORA (write once run anywhere) platform is what I need. After long thought, Dart and
+Flutter is that platform. So here we go again. 🤓🤓🤓
