@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, unnecessary_type_check
+
 /*
   FINAL AND CONST
 
