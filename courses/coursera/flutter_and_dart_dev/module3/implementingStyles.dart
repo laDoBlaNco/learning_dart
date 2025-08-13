@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget {
 }
 
 Styling Buttons
-  • Flutter buttons inclue:
+  • Flutter buttons include:
     • ElevatedButton
     • TextButton
     • OutlinedButton
