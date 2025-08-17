@@ -370,7 +370,98 @@ void main() {
   print(anonymousUser8.toJson());
   print('');
 
-  
+  print('===Factory Constuctors Used to deserialize from JSON===');
+  final map = {'id': 10, 'name': 'Manda'};
+  final manda = User9.fromJson(map);
+  print(manda);
+  print(manda.toJson());
+  print('');
+
+  print('===Mini-exercise===');
+  final pw2 = Password2('my_value');
+  print(pw2);
+  print('');
+
+  print('===Dart Objects===');
+  final myObject = MyClass();
+  final anotherObject = myObject;
+  // both reference the same instance (object) in memory. Changing in one object will
+  // impact the other.
+  print(myObject.myProperty);
+  anotherObject.myProperty = 2;
+  print(myObject.myProperty);
+  // Just two names for the same instance/object
+  print('');
+
+  print('===Getters Examples - Dedicated and Calculated===');
+  const user10 = User10(id: 66, name: 'Odalis');
+  const anonymousUser10 = User10.anonymous();
+  print(user10);
+  print(user10.id); // using the new getters
+  print(user10.name);
+  print(user10.isBigId); // using a calculated getter
+  print(user10.toJson());
+  print(anonymousUser10);
+  print(anonymousUser10.id);
+  print(anonymousUser10.isBigId);
+  print(anonymousUser10.name);
+  print(anonymousUser10.toJson());
+  print('');
+
+  print('===Setters===');
+  final email = Email();
+  print(email.value); // nothing
+  email.value = 'kev@example.com';
+  print(email.value);
+  print('');
+
+  print('===Refactoring Email===');
+  final email2 = Email2();
+  print(email2.value);
+  email2.value = 'oda@example.com';
+  print(email2.value);
+  print('');
+
+  print('===Refactoring of User===');
+  const user11 = User11(id: 66, name: 'Odalis');
+  const anonymousUser11 = User11.anonymous();
+  print(user11);
+  print(user11.toJson());
+  print(anonymousUser11);
+  print(anonymousUser11.toJson());
+  print('');
+
+  print('===Static Members===');
+  // no instantiate needed to access myProperty or call myMethod
+  final value = SomeClass.myProperty;
+  print(value);
+  SomeClass.myMethod();
+  print('');
+
+  print('===Static Constants===');
+  const user12 = User12(id: 66, name: 'Odalis');
+  const anonymousUser12 = User12.anonymous();
+  print(user12);
+  print(user12.toJson());
+  print(anonymousUser12);
+  print(anonymousUser12.toJson());
+  print('');
+
+  print('===Static Methods Used to deserialize from JSON===');
+  final map13 = {'id': 10, 'name': 'Manda'};
+  final manda13 = User13.fromJson(map13);
+  print(manda13);
+  print(manda13.toJson());
+  print('');
+
+  print('===Challenges===');
+  print('===Challenge 1: Bert and Ernie===');
+
+  print('');
+
+  print('===Challenge 2: Spheres===');
+
+  print('');
 }
 
 /* Undestanding object Serialization
