@@ -456,11 +456,17 @@ void main() {
 
   print('===Challenges===');
   print('===Challenge 1: Bert and Ernie===');
-
+  final bert = Student('Bert', 'Sanders', 95);
+  final ernie = Student('Ernie', 'Johnson', 85);
+  print(bert);
+  print('');
+  print(ernie);
   print('');
 
   print('===Challenge 2: Spheres===');
-
+  const sphere = Sphere(radius: 12);
+  print(sphere.volume);
+  print(sphere.surfaceArea);
   print('');
 }
 
@@ -506,3 +512,30 @@ Despite the name, it's far and wide outside the world of JavaScript
   
   And thus I've continued these notes on that file, since this one is getting 
   pretty long*/
+
+  /*Key Points
+    ▪ Classes packages data and functions inside a single stucture
+    ▪ Varibles in a class are called fields, and public fields or getter methods
+      are called properties
+    ▪ Functions in a class are called methods
+    ▪ I can customize how an object is printed by overriding the toString method
+    ▪ I create an object from a class by calling a constructor method
+    ▪ Generative constructors can be unnamed or named
+    ▪ Unnamed generative constructors have the same name as the class, while
+      named generative constructors have an additional identifier after the 
+      class name using the dot operator
+    ▪ I can forward from one construtor to another by using the keyword 'this'
+      much like when we use the super class
+    ▪ Initializer lists allow me to check constructor parameters with assert
+      and initialize field variables
+    ▪ Adding const to a constructor allows me to create immutable, canonical
+      instances of the class (cononical means that Dart only ever sees one 
+      instance, no matter how many we instantiate, as long as the properties used
+      to crete them are the same.  Similar but not the same as
+      a singleton class)
+    ▪ Factory constructors allow me to hide the implementation details of how I
+      provide the class instance  
+    ▪ Classes have getters and setters which I can customize without affecting
+      how the object is used
+    ▪ Adding the static keyword to a property or method makes it belong to the
+      class rather than the instance*/

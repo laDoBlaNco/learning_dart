@@ -89,7 +89,7 @@ class User8 {
 In addition to being immutable, another benefit of const variables is that they're
 CANONICAL INSTANCES, which means that no matter how many instances I create, as long
 as they properties used to create them are the same, Dart will only see a single 
-instance 🤔🤔🤯🤯 (I've heard of that before but called something else. I think it
+instance 🤔🤔🤯🤯 (I've heard of that before but called something else. (Singleton) I think it
 was in Lua and Defold or Godot). This means I can instantiate User.anonymous() 
 a thousand times across my app without incurring the performance it of having
 a thousand different objects.
@@ -474,8 +474,41 @@ class User13 {
 /*Challenges
 
   Challenge 1: Bert and Ernie
-
+  Create a Student class with final firstName and lastName String properties
+  and a variable grad as an int property. Add a constructor to the class that
+  initializes all the properties. Add a method to the class that nicely formats
+  a Student for printing. use the class to create students Bert and Ernie with 
+  grades 95 and 85, respectively.
 
   Challenge2: Spheres
-
+  Create a sphere class with a const constructor that takes a positive length radius
+  as a named parameter. Add getters for the volume and surface area but non for the 
+  radius. Dont' use the dart:math package but store my own version of pi as a 
+  static constant. Use my class to find the volume of and surface area of a sphere
+  with a radius of 12.
 */
+
+class Student {
+  Student(this.firstName, this.lastName, this.grade);
+  final String firstName;
+  final String lastName;
+  int grade;
+
+  @override
+  String toString() {
+    return '''
+First Name: ${this.firstName}
+ Last Name: ${this.lastName}
+     Grade: ${this.grade}
+''';
+  }
+}
+
+class Sphere {
+  const Sphere({required this.radius}) : assert(radius > 0);
+  final double radius;
+
+  double get volume => (4/3)*Sphere.pi*(this.radius*this.radius*this.radius);
+  double get surfaceArea => 4*Sphere.pi*(this.radius*this.radius);
+  static const pi = 3.14159;
+}
