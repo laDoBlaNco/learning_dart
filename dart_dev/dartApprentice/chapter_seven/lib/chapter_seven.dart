@@ -1,4 +1,4 @@
-// ignore_for_file: dead_code, unused_local_variable, duplicate_ignore
+// ignore_for_file: dead_code, unused_local_variable, duplicate_ignore, unused_field
 
 /*Chapter 7: Nullability
 
@@ -186,6 +186,22 @@ void main() {
     myItem,
   ); // rather than crashing the app, it just passes over null. If our
   // list is set to null than you obviously can't index it or have any of its values
+  print('');
+
+  print('===The Dangers of Being Late===');
+  final user = User3();
+  print('...nothing to output here');
+  // print(user.name); // this isn't caught at compile-time, but...
+  // I get a LateInitializerError: Field 'name' has not been initialized
+  print('');
+
+  print('=== Challenge 1: Random Things===');
+
+  print('');
+
+  print('===Challenge 2: Naming Customs===');
+
+  print('');
 }
 
 /*Handling nullable types
@@ -324,5 +340,115 @@ class User {
         String? name;  // declaring nullable type instance variable
       }
 
-    
+  No promotion for non-local variables
+  One confusing topic is the LACK of promotion for nullable instance variables. 🤔
+  Remembering that Dart promotes nullable variables in a method to their non-nullable
+  counterpart if Dart's flow analysis can guarantee the var will never be null
 */
+bool isLong(String? text) {
+  if (text == null) return false;
+  return text.length > 100;
+}
+
+// this above is guaranteed to be non-null so 'text' is promoted from String? to String
+// But look at this...below it doesn't work in the class 🤔🤔🤔 but why if we already
+// checked for null? Basically because Dart can't guarantee that OTHER methods or subclasses
+// won't change the value of a non-local variable before it's used.
+// One way around this is using '!' as I added below
+class TextWidget {
+  String? text;
+
+  bool isLong() {
+    if (text == null) return false;
+    return text!.length > 100; // with null assertion
+  }
+}
+
+// another option would be to shadow the non-local var with a local one
+class TextWidget2 {
+  String? text;
+
+  bool isLong() {
+    final text = this.text; // shadowing our non-local var
+    if (text == null) return false;
+    return text.length > 100; // and now it works
+  }
+}
+
+/*The Late Keyword
+  Now let's say I want to use a non-nullable type but can't initialize it. But since Dart
+  doesn't allow me to access instance methods during initialization I get an error.
+
+  To solve this I use the 'late' keyword. (it doesn't replace 'final'). It means that 
+  Dart doesn't initialize the variable right away. It only initializes it when I 
+  access it the first time. This is also known as LAZY INITIALIZATION. 
+
+  Its common to use this while intializing field variables in the constructor
+*/
+class User2 {
+  User2(this.name);
+
+  final String name;
+  late final int _secretNumber = _calculateSecret();
+
+  int _calculateSecret() {
+    return name.length + 42;
+  }
+}
+
+/*The dangers of being late
+  I can use late with final as seen above, but at times I might want to use late with
+  non-final vars. But I need to be careful with this. 
+
+  I'm promising Dart that I'll initialize the field before using it, so the check
+  is no longer at compile-time but now runtime. So if I try to do the below? I 
+  get an error
+*/
+class User3 {
+  late String name;
+}
+// call above in main ... 
+// We get an error LateInitializationError: Field 'name' has not been initialized
+/*For this reason, ti's a bit dangerous to use 'late' when I'm not initializing
+  it either in the constructor body or in the same line that its declared.  Like
+  null assertion operator, using late sacrifices the assurances of sound null safety
+  and puts the responsbility of handling null into my hands. If I mess it up, that's
+  on me 
+  
+  Benefits of being lazy
+  Dart knows that it pays to be lazy sometimes. there are times when it might take
+  some heave calculations to initialize a variable. If I never use that variable, then
+  it would be a waste of resources. With lazy initialization, there is no waste.
+
+  Top level and static variables have always been lazy in Dart. The 'late' keyword
+  makes others lazy too. So even if the var is nullable, I can still add 'late' to
+  get the benefit of being lazy
+
+    class SomeClass{
+      late String? value = doHeavyCalculation();
+      String? doHeavyCalculation(){
+        // do heave calculation
+      }
+    }
+
+  That method only runs after I ACCESS the value for the first time. If I never access
+  it, then it never does the work. 
+
+  */
+
+  /*Challenge 1: Random things
+    Write a function that randomly returns 42 or null. Assign the return value
+    of the function to a variable named result that will never by null. Give
+    result a default of 0 if the function returns null */
+
+
+  /*Challenge 2: Naming customs
+    People around the world have different customs for giving names to children
+    It would be difficult to create a data class to accurately represent them
+    all, but try it like this:
+      ▪ create a class called Name with givenName and surname properties
+      ▪ Some people write their surname last and some write it first. Add a bool
+        property called surnameIsFirst to keep track of this
+      ▪ Not everyone in the world has a surname
+      ▪ Add a toString method that prints the full name 
+   */
