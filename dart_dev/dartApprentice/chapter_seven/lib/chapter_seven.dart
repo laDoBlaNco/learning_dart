@@ -73,6 +73,8 @@
       it'll be given the default value of null
 
  */
+import 'dart:math';
+
 void main() {
   // int postalCode = null; // error: A value of type 'Null' can't be assigned to a variable
   // of type 'int'
@@ -195,12 +197,19 @@ void main() {
   // I get a LateInitializerError: Field 'name' has not been initialized
   print('');
 
-  print('=== Challenge 1: Random Things===');
-
+  print('=== Challenge 1: Random Nothings===');
+  int result = randomNothings() ?? 0;
+  print(result);
   print('');
 
   print('===Challenge 2: Naming Customs===');
-
+  Name name1 = Name('Kevin');
+  Name name2 = Name('Odalis', surname: 'Whiteside');
+  print(name1);
+  print(name2);
+  name2.surnameIsFirst = true;
+  print(name2);
+  
   print('');
 }
 
@@ -407,7 +416,7 @@ class User2 {
 class User3 {
   late String name;
 }
-// call above in main ... 
+// call above in main ...
 // We get an error LateInitializationError: Field 'name' has not been initialized
 /*For this reason, ti's a bit dangerous to use 'late' when I'm not initializing
   it either in the constructor body or in the same line that its declared.  Like
@@ -436,13 +445,16 @@ class User3 {
 
   */
 
-  /*Challenge 1: Random things
+/*Challenge 1: Random Nothings
     Write a function that randomly returns 42 or null. Assign the return value
     of the function to a variable named result that will never by null. Give
     result a default of 0 if the function returns null */
+int? randomNothings() {
+  if (Random().nextInt(2).isEven) return null;
+  return 42;
+}
 
-
-  /*Challenge 2: Naming customs
+/*Challenge 2: Naming customs
     People around the world have different customs for giving names to children
     It would be difficult to create a data class to accurately represent them
     all, but try it like this:
@@ -452,3 +464,38 @@ class User3 {
       ▪ Not everyone in the world has a surname
       ▪ Add a toString method that prints the full name 
    */
+class Name {
+  Name(this.givenName, {this.surname = ''});
+  String givenName;
+  String surname;
+  bool surnameIsFirst = false;
+
+  @override
+  String toString() {
+    if (surnameIsFirst) return '$surname $givenName';
+    return '$givenName $surname';
+  }
+}
+
+/*Key Points:
+
+  ▪ Null means 'no value'
+  ▪ A common cause of errors for programming languages in general comes from
+    not properly handling null
+  ▪ Dart 2.12 introduced sound null safety to the language
+  ▪ Sound null safety distinguishes nullable and non-nullable types.
+  ▪ A non-nullable type is guaranteed to never by null
+  ▪ Null aware operators help developers to gracefully handle null
+    ▪ ?? if-null
+    ▪ ??= null-aware assignment
+    ▪ ?. null-aware access (because accessing a property is just a getter method)
+    ▪ ?. null-aware method invocation
+    ▪ ! null assertion
+    ▪ ?.. null-aware cascade
+    ▪ ?[] null-aware index
+    ▪ ...? null-aware spread
+  ▪ The 'late' keyword allows me to delay initialization of a field in a class
+  ▪ Using 'late' also makes initialization lazy, so a variable's value won't be
+    calculated until I access the variable for the first time.
+
+*/
