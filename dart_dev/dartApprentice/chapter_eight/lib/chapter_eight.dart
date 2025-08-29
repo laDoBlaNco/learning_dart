@@ -605,14 +605,36 @@ void main() {
   print('');
 
   print('===Challenge 1: A unique request===');
+  /*Write a function that takes a paragraph of text and returns a collection of unique
+    string characters that the text contains*/
+  const myParagraph = '''
+Write a function that takes a paragraph of text and returns a collection of unique
+string characters that the text contains. These instructions will be 
+my paragraph. Just a few lines needed, of course.''';
+  print(aUniqueRequest(myParagraph));
 
   print('');
 
   print('===Challenge 2: Counting on you===');
+  /*Repeat challenge 1, but this time the function should return a collection
+    that contains the frequency, or count of every unique character */
+  print(countingOnYou(myParagraph));
 
   print('');
 
   print('===Challenge 3: Mapping users===');
+  /*Create a class User with properties for 'id' and 'name'. Make a list with
+    three users, specifying any appropriate names and IDs. Then write a function
+    that converts my user list to a list of maps whose keys are id and name */
+
+  List<User> myUsers = [
+    User(3824, 'Kevin'),
+    User(6699, 'Odalis'),
+    User(3344, 'Kelen'),
+  ];
+  print(myUsers);
+  final userListMap = convertUsers(myUsers);
+  print(userListMap); // 🤯🤯🤯🤓🤓🤓
 
   print('');
 }
@@ -711,3 +733,80 @@ These are just general guidlines as some don't follow this convention.*/
   actually reverse the elements of the collection until I try to access those elements,
   such as by printing the collection or converting it to a list using .toList(). 
   Understanding this can help me put off work that doesn't need to be done yet*/
+
+// Challenge  1:
+Set aUniqueRequest(String para) {
+  final chars = <String>{};
+  for (var char in para.split('')) {
+    chars.add(char);
+  }
+  return chars;
+}
+
+// Challenge 2:
+Map<String, int> countingOnYou(String para) {
+  Map<String, int> charCount = {};
+  for (String char in para.split('')) {
+    charCount[char] = (charCount[char] ?? 0) + 1;
+    // this took a little while to figure out. But its basically a null check before
+    // I can use the addition '+' method. I could have used an if statement
+    // if(charCount[char] != null){...}  or what I did above checking if its null use 0
+    // with ?? but always add 1 for the counter.
+    // And finally I had to make sure I was actually assigning that back to charCount[char]
+    // to add it to the Map
+  }
+  return charCount;
+}
+
+// Challenge 3:
+class User {
+  User(this.id, this.name);
+  final int id;
+  final String name;
+}
+
+List<Map<String, dynamic>> convertUsers(List<User> users) {
+  List<Map<String, dynamic>> result = [];
+  for (var user in users) {
+    result.add({'id': user.id, 'name': user.name});
+  }
+  return result;
+}
+/*NOTES:
+  For that last challenge, there is probably other ways to do this, but since its a 
+  list of maps and those maps contain values of different types, regardless of what
+  the keys are, I had to use 'dynamic'. First time using that myself, but I've seen
+  it before and now I understand a bit more as to why I should use it. 
+  Then building the list is just a matter of using .add and plugging in the values
+  with the properties of my users */
+
+
+/*Key Points:
+
+  ▪ Lists store an ordered collection of elements
+  ▪ Sets store an unordered collection of UNIQUE elements
+  ▪ Maps store a collection of key-value pairs
+  ▪ The elements of a collection are mutable by default (even using final)
+  ▪ The spread operator (...) allows me to expand one collection inside of
+    another collection
+  ▪ Collection if and for can be used to dynamically create the content of
+    a list or set (I don't think I could use COLLECTION-FOR for that last challenge
+    in any way 🤔
+  ▪ I can iterate over ANY collection, but for a map I need to iterate over the keys
+    or the values if I use a for-in loop
+  ▪ Higher order methods take functions as a parameter and act on the elements of a 
+    collection 
+    ▪ This idea of higher-order permeates throughout Dart and Flutter with higher-order
+      classes and widgets as well. "Things that take other things"
+  ▪ The map method, not to be confused with the Map type, performs an operation on
+    each element of a collection and returns the results as an Iterable
+  ▪ The where method filters an iterable collection based on a condition
+  ▪ The reduce and fold methods consolidate a collection down to a single value
+    ▪ reduce/fold in Dart is reduce in JS except where JS uses optional params
+      Dart has a different function depending on the params    
+      .reduce(()=>result) - 1 param
+      .fold(start,()=>result) - 2 params
+  ▪ The sort method sorts lists in place according to its data type
+  ▪ There are more collectiosn in Dart such as Queue, which is FIFO structure
+    I can find more about all of these in dart:collection library
+*/
