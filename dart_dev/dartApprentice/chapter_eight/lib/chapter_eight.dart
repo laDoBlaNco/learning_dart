@@ -559,7 +559,62 @@ void main() {
   print('');
 
   print('===Performing a custom sort===');
-  
+  /*for the sort method I can pass a function as an arg for custom sorting 
+    Since compareTo returns -1,0,1, this is all sort needs to do the custom
+    sort*/
+  desserts.sort((d1, d2) => d1.length.compareTo(d2.length));
+  print(desserts);
+  print('');
+
+  print('===Combining higher order methods===');
+  /*I can also chain together higher order methods. This would be like putting higher
+    functions as args to other higher order functions, but since I am dealing with 
+    methods I can do the chaining 🤯  */
+  final bigTallDesserts = desserts
+      .where((dessert) => dessert.length > 5)
+      .map((dessert) => dessert.toUpperCase());
+  print(bigTallDesserts);
+  print('');
+
+  print('===Mini-exercise 1===');
+  /*1. Use sort to find the highest and lowest grades */
+  final scores = [89, 77, 46, 93, 82, 67, 32, 88];
+  scores.sort();
+  print('${scores.first} and ${scores.last}');
+  print('');
+
+  print('===Mini-exercise 2===');
+  /*2. User where to find all the B grades, that is all the scores between 80 and 90  */
+  final bGrades = scores.where((score) => score > 80 && score < 90);
+  print(bGrades);
+  print('');
+
+  print('===When to use list, sets and maps===');
+  print('nothing to output');
+  /*When should I use which type of collection:
+    ▪ choose lists if order matters. Try to insert at the end of lists wherever
+      possible to keep things running smoothly (DSA🤔🤓) And be aware that searching
+      can be slow with big collections
+      
+    ▪ Choose sets if I am only concerned with whether something is in the collection
+      or not. This is faster than searching a list
+      
+    ▪ Choose maps if I frequently need to search for a value by a key. Search by key 
+      is also fast */
+
+  print('');
+
+  print('===Challenge 1: A unique request===');
+
+  print('');
+
+  print('===Challenge 2: Counting on you===');
+
+  print('');
+
+  print('===Challenge 3: Mapping users===');
+
+  print('');
 }
 
 /*NOTE:
