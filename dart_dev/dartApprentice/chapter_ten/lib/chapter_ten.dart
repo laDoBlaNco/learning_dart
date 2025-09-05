@@ -87,5 +87,98 @@
 
   Dart Isolates
 
-  
+  Dart's single thread runs in what it calls an ISOLATE. I've heard of these when
+  watching videos on flutter.Each isolate has its own allocated memory area, which
+  ensures that no isolate can access any other isolate's state. That means that
+  there's no need for a complicated locking system. 🤔🤓 Interesting. Such a
+  system greatly reduces the cognitive load on the programmer. So it sounds a little
+  like the other system in other languages, but better?
+
+  But isn't concurrency slow?
+
+  If I'm running all of a program's tasks on a single thread, it would seem like it 
+  would be really slow. Hoever, it turns out that that's not usually the case. When
+  2 thread programs compare to a single thread program, the concurrent does take a
+  little longer, but it isn't MUCH LONGER. The reason is that the parallel threads
+  are idle for much of the time. A single thread is usually more than enough memory
+  to accomplish what needs to be done. 
+
+  Flutter needs to update the UI 60 times a second, where each update timeslice is
+  called a frame. That leaves about 16 milliseconds to redraw the UI on each frame. 
+  It doesn't take that long, normally, so that gives me additional time to perform
+  other work while the thread is idle. As long as that work doesn't block Flutter
+  from updating the UI on the next frame, the user won't notice any problems. The 
+  trick is to schedule tasks during the thread's downtimes. But how do I do that? 🤔
+
+  Synchronous vs asynchronous code
+
+  The word SYNCHRONOUS is composed of syn, meaning 'together', and chron meaning 'time'.
+  Synchonous code is where each instruction is executed in order, one line of code
+  immediately following the previous one. 
+
+  This is in contrast to ASYNCHRONOUS code, which means NOT TOGETHER IN TIME. That is
+  with asynchronous code, certain tasks are rescheduled to be run in the future when
+  the thread isn't busy. 
+
+  All of the code I've written so far in this book has been synchronous
+
+  For example:
 */
+void main() {
+  print('===Synchronous vs Asynchronous===');
+  print('first');
+  print('second');
+  print('third');
+  /*Since the code is executed synchronously, it'll never print in a different 
+    order than 'first', 'second', 'third'
+
+    for many tasks, order matters. Multiplying before adding is different than adding
+    before multiplying. I have to open the bottle before I can take a drink. For other
+    tasks, though, the order doesn't matter. It doesn't matter if I brush my teeth
+    first or wash my face first. It doesn't matter if I put a sock on the right foot
+    first or the left foot first. 
+
+    As in life, so it is with Dart. While some code needs to be executed in order,
+    other taskss can be temporarily postponed. The postponable tasks are where the 
+    DART EVENT LOOP comes in.
+
+    The event loop
+    I've learned that Dart is based around concurrency on a single thread, but how
+    exactly does Dart manage to schedule tasks asynchronously then? Dart uses what it
+    calls an event loop to execute tasks that had previously been postponed. This sounds
+    to me a little like node.js. 
+
+    The event loop has two queues:
+      ▪ microtask queue
+        ▪ is mostly used internally by Dart
+      ▪ event queue
+        ▪ is for events like a user entering a keystroke or touching the screen or
+          data coming from a database, file, or remote server. 
+
+    ▪ Synchronous tasks in the main isolate thread are always run immediately. I can't
+      interrupt them
+
+    ▪ If Dart finds any long-running tasks that agree to be postponed, Dart puts them in
+      the event queue
+
+    ▪ When Dart is finished running the synchronous tasks, the event loop checks the 
+      microtask queue. If the microtask queue has any tasks, the event loop puts them
+      on the main thread to execute next. The event loop keeps checking the microtask
+      queue until it's empty.
+
+    ▪ If the synchronous task and microtask queue are both empty, then the event loop
+      sends the next waiting task in the event queue to run in the main thread. Once
+      it gets there, the code is executed synchronously. Just like any other synchronous
+      code, nothing can interrupt it after it starts. 
+
+    ▪ If any new microtasks enter the microtask queue, the event loopp always handles
+      them before the next event in the event queue
+
+    ▪ This process continues until all of the queues are empty. 
+
+  Running code in parallel
+  
+
+
+  */
+}
