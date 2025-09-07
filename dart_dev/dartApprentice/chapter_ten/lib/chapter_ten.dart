@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 /*Chapter 10: Asynchronous Programming
 
   I've come a long way in this book and studying Dart. This chapter is an
@@ -124,11 +126,12 @@
 
   For example:
 */
-void main() {
+Future<void> main() async {
   print('===Synchronous vs Asynchronous===');
   print('first');
   print('second');
   print('third');
+  print('');
   /*Since the code is executed synchronously, it'll never print in a different 
     order than 'first', 'second', 'third'
 
@@ -177,8 +180,211 @@ void main() {
     ▪ This process continues until all of the queues are empty. 
 
   Running code in parallel
-  
 
+  When people say Dart is single-threaded, they mean that Dart only runs on a single
+  thread IN THE ISOLATE. However, that doesn't mean I can't have tasks running on another
+  thread. One example of this is when the underlying platform performs some work at the
+  request of Dart. For example, when I ask to read a file on the system, that work isn't
+  happening on the Dart thread. The system is doing the work inside its own process. Once
+  the system finishes the work, it passes the result back to Dart, and Dart schedules 
+  some code to handle the result in the event queue. A lot of I/O work from dart:io lib
+  happens in this way. 
 
+  Another way to perform work on other threads is to create a new Dart isolate. The new
+  isolate has its own memory and its own thread working in parallel with the main isolate.
+  The two isolates are only able to communicate through messages, though. they have no
+  access to each other's memory state. The idea is similar to messaging a friend. Sending
+  Ray a text message doesn't me access to the internal memory of his mobile device. He 
+  simply checks his messages and replies to me when he feels like it.
+
+  I won't often need a new isolate though. However, if I have a task that's taking too
+  long on my main isolate thread, which I'll notice as UNRESPONSIVENESS or JANK in the
+  UI, then this work is likely a good candidate for handing it off to another isolate.
+  The final section of this chapter will go over how to do that.
+
+  Futures
+
+  I've seen Dart Futures in some other tutorials. I now know that at a high level, Dart
+  handles asynchronous code with its event loop and two queues (microtask, event). Not
+  it's time to learn how to work with async code at a practical level.
+
+  The Future Type
+
+  Dart has a type/class called Future, which is basically a PROMISE to give me a 
+  value that I really want later. The signature of a method that returns this
+  promise is:
+
+    Future<int> countTheAtoms();  
+    -- From what I already know this the generic syntax. Returning a "future" int
+
+    Future itself is generic 🤓 (I knew that), meaning it can provide any type. In 
+    this case though, the future is promising to give me an integer. In my code,
+    if I called countTheAtoms, Dart would quickly return an object of type Future<int>.
+    In effect, this is saying, "Hey, I'll get back to you with that int sometime later
+    Carry on!", in which case I'd proceed to run whatever async code is next.
+
+    Behind the scenes, Dart has passed my request on to, presumably, an atom counting
+    machine, which runs independently of my main Dart isolate. At this point, there 
+    is nothing on the even queue, and my main thread is free to do other things. Dart
+    knows about the uncompleted future, though. When the atom counting machine finishes
+    its work, it tells Dart and Dart puts the result, along with any code I give it
+    to handle the result, on the event queue. Dart says, "Sorry that took so long. Who
+    knew that there were 9.2 quintillion atoms in that little grain of sand! I'll put
+    your handling code at th end of the event queue. Give the event loop a few milliseconds
+    and then it'll be your turn."
+
+    IMPORTANT NOTE:
+      Since the largest an int can be on a 64 bit system is 9,223,372,036,854,775,807
+      which is 2^63-1, it would be better to use BigInt as the turn type of countTheAtoms
+      (Future<BitInt> countTheAtoms();). Although slower, BigInt can handle arbitrarily
+      large numbers. When 'int' values are too big at compile time, there's a compile-time
+      error. However, at runtim, they'll just overflow. which means
+
+        9223372036854775807 + 1 == -9223372036854775808
+      
+    States for a Future
+
+    Now before a Future completes, there's not really anything I can do with it, but
+    after it completes it will have two possible results:
+      ▪ The value I was asking for
+      ▪ an error
+
+    This works out to three different states for a Future:
+      ▪ Uncompleted
+      ▪ Completed with a value
+      ▪ Completed with an error
+    
+    Let me finally look at an example of a Future, after  only 250 lines of notes 🤯🤯🤯
+    */
+
+  final myFuture = Future<int>.delayed(Duration(seconds: 1), () => 42);
+  print(myFuture);
+  print('');
+  /*What's happening here?
+      ▪ myFuture is of type Future<int>
+      ▪ The first argument is a Duration (I've used this type/class before). After
+        a delay of 1 second, Dart will add the anony function in the second arg
+        to the event queue.
+      ▪ When the event loop gets to ()=42 it will run that function in the main 
+        isolate, which results in the function returning 42
+
+    But if I try to print it I get "Instance of 'Future<int>'". 
+    There are two ways to get the actual value after a future completes:
+      ▪ using callbacks
+      ▪ using async-await syntax
+
+    Getting the result with callbacks
+
+    A callback is an anony function that will run after some event has completed. In
+    the case of a future, there are three callback opportunities: 
+      ▪ then
+      ▪ catchError
+      ▪ whenComplete
+  */
+
+  print('Before the future');
+  final myFuture2 = Future<int>.delayed(Duration(seconds: 1), () => 42)
+      .then((value) => print('Value: $value'))
+      .catchError((error) => print('Error: $error'))
+      .whenComplete(() => print('Future  is complete'));
+  print('After the future');
+  print('');
+
+  /*Recall that a Future will either give me a value or an error. if it completes with
+  a value, I can get the value by adding a callback to the 'then' method. The anony 
+  function provides the value as an argument so that I have access to it. On the other
+  hand, if the Future completes with an 'error', i can handle it in catchError. Either
+  way, though, whether the future completes with a valur or an error, I have the 
+  opportunity to run any final code I want to in 'whenComplete'
+
+  Also note that these are all functions of Future
+
+  Another NOTE:
+  "After the future" was printed before the future results. That print statement is
+  synchronous, so it ran immediately. Even if the future didn't have a one-second
+  delay, it would still have to go to the event queue and wait for all the synchronous
+  code to finish.
+
+  Getting the result with async-await now
+
+  Callbacks  are pretty easy to understand, but they can be hard to read, especially
+  if I nest them in multiple layers. A more readable way to write the code above is
+  using the 'async' and 'await' syntax. This syntax makes futures look much more like
+  synchronous code.
+
+  I first need to add Future<void> to the main() instead of just void and add 'async'
+  right after main
+
+    void main() {}
+
+  is now
+
+    Future<void> main() async {}
+  */
+
+  print('Before the future (using async and wait)');
+
+  final value = await Future<int>.delayed(Duration(seconds: 1), () => 42);
+  print('Value: $value');
+  print('After the future');
+  print(value.runtimeType);
+  print('');
+
+  // Note: Interesting side note here demonstrating how the event loop works. with the
+  // two Futures above I get some overlap of when items are printed. Mainly the
+  // first line of the second version is printed before the last lines of the first
+  // version
+
+  /*Few more important things here
+      ▪ If a function uses the 'await' keyword, then it must return a 'Future' and
+        add 'async' keyword before the function body. Using 'async' clearly tells Dart
+        that this is an asynchronous function, and that the results will go to the
+        event queue. Since main doesn't return a value, here I use Future<void>
+
+      ▪ In the front of the Future, I added the await keyword. Once Dart sees 'await',
+        the rest of the function won't run until the Future completes. If the Future
+        completes with a value, there are no callbacks. I have direct access to that
+        value. Thus the type of the value variable above is not Future, but int.
+
+    If the Future returns an error, then I have to do the error-handling in Dart's
+    try-catch block
+
+    Handling errors with try-catch-finally blocks
+
+    If I'm attempting an operation t hat might result in an error, I'll place it in
+    the try block. if there is an error, Dart will give me a chance to handle it in 
+    the catch block. And whether there is an error or not, I can run some last code
+    in the finally block
+
+      NOTE: Dart has both an Exception type and an Error type. The words exception and 
+            error are often used interchangeably, but an Exception is something that 
+            I should expect and handle in the catch block. However, an Error is the
+            result of a programming mistake. I should let the error crash my app
+            as a sign  that I need to fix whatever caused the error.
+
+    Try-Catch-Finally blocks with async-await
+  */
+  print('Before the future (using Try-Catch-Finally)');
+  try {
+    final value2 = await Future<int>.delayed(Duration(seconds: 1), () => 42);
+    print('Value: $value2');
+  } catch (error) {
+    print(error);
+  } finally {
+    print('Future is complete');
+  }
+
+  print('After this Future');
+  print('');
+
+  /*The catch and finally blocks correspond  to the catchError and whenComplete 
+    callbacks that I saw earlier, right. If the future completes with an error, then
+    the try block will immediately be aborted and the catch block will be called.
+    But no matter whether the future completes with a value or an error, the 
+    finally block will always be called. 
+
+    Catching the Error
+
+    
   */
 }
