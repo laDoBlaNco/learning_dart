@@ -269,5 +269,109 @@ void main() {
 
     Native code ==> Android/iOS (Canvas, Bluetooth, camera, sensors, ...) 
 
+  Since the Dart compiler can produce native ARM code there is no need for transaltion.
+  The flutter application directly communicates with the platform's native APIs. In 
+  addition, Flutter uses it own very efficient rendering engine called IMPELLER, which
+  controls each pixel on the screen. This leads to a few significant consequences:
+
+    ▪ As can be seen above, OEM widgets are NOT required because Flutter uses impellerr
+      to paint pixels on the screen. Thanks to this architecture choice, Flutter is 
+      able to render anything it wants in a consistent say on any platform. For example,
+      the same application made with Flutter looks identical (pixel-perfect) on Android
+      and iOS (and all the other platforms).
+
+    ▪ No bridge is required becasue the Dart code is compiled into native machine code
+      The platform can directly "understand" Dart instructions without interpreters.
+      Flutter ships with a copy of its small and efficient c++ engine (which includes
+      impeller). without the need for a bridge, the runtime performance of the applications
+      is incredibly hight (up to 120 fps on high-end devices)
+
+    ▪ Flutter can still perform native API calls to the camera, sensors, Bluetooth, and
+      much more. The engine provides hooks to the framework to make native calls in
+      the underlying platform. That'll be covered more in chapter 23 - "Platform 
+      interactions".
+
+  flutter has a layered architecture that glues together the Dart source code, the c++
+  engine, and the platform-specific implementation. Layers are independent, have no
+  access to the level below, and are replaceable. from the os point of view, a Flutter
+  application is packaged in the same way as any other native application 🤯🤓
+
+  For mobile, desktop, and embedded operating systems, there are two levels between
+  Dart  and the host platform:
+
+    ▪ Layer 1 == Framework (Dart) == Widgets, Rendering, Animations, Painting, etc
+
+    ▪ Layer 2 == Engine (c/c++) == Platform channels, Composition, Frame Handler,
+      System events, etc
+
+    ▪ Layer 3 == Embedder (Native Code) == Native Plugins, App Packaging, Thread Setup,
+      Event Loop Interop, etc
+
+    ▪ Operator System
+
+  The operating system treats a Flutter application as if it was a native application 
+  thanks to the embedder, which is written in platform specific language. Its the glue
+  that connects Flutter engine to the underlying operating system. This means knowing
+  c++, and in some cases Objective C++, and Java would allow me to hack on the embedders
+  as well if needed.
+
+    ▪ Android: writen in C++ and Java
+
+    ▪ IOS and macOS: written in Objective C++
+
+    ▪ Windows and Linux: written in C++
+
+  If I wanted a Flutter application to run in any other platform not listed above
+  (like playstation or nintendo switch), I would need to create a new embedder for
+  the target platform. Thsi may seem to be the same idea as a bridge, but here 
+  everything is AOT compiled into native machine code so nothing is "translated" or
+  "serialized" at runtime. That =s performance.
+
+    ▪ NOTE: I can imagine that a Flutter application is a plug, and I want to insert
+            it into different kinds of wall sockets. In this case, the embedder 
+            would be the adapter with the same shape for the plug but different 
+            configurations for the wall socket. 
+
+  The Flutter c++ engine can be accessed in Dart using the dart:ui library, which 
+  basically contains c++ code wrapped in dart classes/types. This isn't often the 
+  case since Flutter libraries provide a more dev-friendly API to create UIs.
+
+  So now I wonder why I haven't seen anything about web support yet. The is that 
+  there are some special considerations to make with web. There are different layers
+  for a Flutter web application
+
+    ▪ Layer 1 == Framwork (Dart) == Widgets,Rendering,Animations,Painting,etc
+
+    ▪ Layer 2 == Browser (JS & C++) == HTML/CSS,WASM,Canvas,etc
+
+    ▪ Operating System
+
+  The Flutter engine, writen in c++, is designed to interact with an operating system
+  rather than a web browser. A different approach is therefore required to run Flutter
+  applications on the web
+
+  Thanks to Dart's own compiler capabilities, Flutter applications are compiled directly
+  to JS code so the c++ engine is not required anymore. This means that Flutter generates
+  a reimplementation of the engine on top of browser APIs with two different ways of 
+  rendering the content:
+
+    ▪ HTML mode: The flutter web application is rendered using HTML, CSS, a canvas, and
+      SVG (vectorial images)
+
+    ▪ CanvasKit mode: The flutter web application is rendered using CanvasKit, which is
+      built using the Web Assembly (WASM) instruction format
+
+  The HTML build mode produces smaller code sizes, the CanvasKit mode is faster and the
+  graphics are more consistent with native applications
+
+  When building a Flutter web application for production, the Dart compiler bundles 
+  together the Dart code and the Flutter framework into a minified .js file. It also
+  performs various optimzation steps, such as tree shaking, which is a dead-code
+  elimination technique.
+*/
+
+
+/*WHY FLUTTER USES DART
+
   
 */
