@@ -373,5 +373,87 @@ void main() {
 
 /*WHY FLUTTER USES DART
 
+  So prior to the massive wave of success that Flutter was (and currently is) surfing,
+  Dart wasn't a very popular language. Google still decided to choose it though, although
+  it didn't have much attention, and it's been a perfect guess for a few reasons:
+
+    ▪ The object oriented programming style. The vast majority of developers are
+      familiar with OOP languages, so the learning curve of Dart will not be steep.
+      It's syntax is also very similar to popular programming languages (it's nothing
+      revolutionary).
+
+    ▪ Dart is a predictable and high-performance language that can guarantee the best
+      runtime quality and the lowest chance of frame dropping. The compiler produces
+      native code for both ARM and x64 platforms which is a huge advantage.
+
+    ▪ Both Dart and Flutter are maintained by Google so the two teams can best 
+      cooperate to fulfill each other's needs, evaluate solutions together and better
+      solve issues. The two can also evolve at their own pace and set (if needed)
+      common goals.
+
+  As I've already seen, Dart is a strongly typed language to the compiler is very 
+  severe about types. This is an important layer of safety that enhances the dev's
+  experience and reduces the risk of runtime errors. The language also has much more
+  to offer:
+
+    ▪ Tree shaking optimiziation, which basically is a dead code elimination strategy
+      performed at compile-time.
+
+    ▪ Thanks to Dart's JIT compiler, Flutter has a blazingly-fast HOT RELOAD feature
+      for applications.
+
+    ▪ A package manager and the possibility to either play with Dart or Flutter code
+      snippets using an online playground tool (DartPad).
+
+    ▪ DevTools is rich suite of performance profiling tools with a powerful debugger.
+      It is covered in Appendix - Section 1 "Working with DevTools"
+
+  Both Dart and Flutter are open-source projects, so anyone with a GitHub account can
+  contribute for free. Throughout the book, I'll see as many Dart and Flutter features
+  as possible to help me become a true guru. 
+*/
+
+/*CREATING A "HELLO WORLD" PROJECT
+
+  NOTE: I've already started the hello_world project from one of the previous examples, so
+  I'll be using that same one to progress through this section. Ok, correction, this
+  is the flutter version so I'll rename my hello_world to hello_world_dart and start
+  again.
+
+  To properly create a new Flutter Application, I can either:
+
+    ▪ Use the console and choose among one of the following commands:
+
+      ▪ flutter create: creates a new Flutter project with a simple counter application
+      ▪ flutter create --template=skeleton: creates a new Flutter project with a more
+        complex starter application having a theme changer and navigation 🤯
+
+      This is the same advice I saw for new Dart projects: Even if I could use
+      any project structure I want, its preferable to follow the recommended structure
+      and adhere to the well-established standards for Flutter project creations.
+
+    ▪ Use an IDE. The leading IDEs recommended are Android Studio (with the Flutter plugin)
+      and Visual Studio Code (with the Flutter extension).
+
+  A Flutter project is nothingmore than a traditional Dart project with some additional
+  files and folders.
+
+    ▪ The lib/ folder contains the source code
+    ▪ The test/ folder is for unit and widget testing
+    ▪ The pubspec.yaml file is for SDK constraints, dependencies, and project-wide
+      settings
   
+  Some Flutter-specific content that I won't find in a Dart project are:
+
+    ▪ The 110n.yaml file, which is used by the framework to internationalize my application
+    ▪ The assets/ folder, conventionally named this way, which contains static files to
+      be bundled in the application such as images, audio or video files
+    ▪ The android/, ios/, web/, macos/, windows/, and linux/ folders contain platform-specific
+      configuration required by Flutter when building for the desired platform
+
+  In chapter 21 - "Creating and maintaining a Flutter App", I'll work with these files and
+  folders. The main() entry point is located in the main.dart file, along with some 
+  Flutter-specific initialization calls. 
+
+  NOTE: Rest of the notes are in the main.dart file of the hello_world project...
 */
