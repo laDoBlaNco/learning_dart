@@ -196,5 +196,64 @@ void main() {
 
   print('');
   print('===Runes===');
-  
+  /*Unicode is an encoding system that associates an integer value (called a code unit) to
+    each character, digit, and symbol that humas use in all the world's writing systems. The
+    unicode standard can be implemented using various transformation formats such as UTF-8,
+    UTF-16, and UTF-23. For example:
+
+      ▪ The letter a is associated with 97 (61 in hex) code unit
+      ▪ The number 5 is associated with 53 (35 in hex) code unit
+      ▪ The Japanese symbol 本 is associated with the '26412' (672c in hex) code point
+
+    The a5 string, for example, in UTF-16 is rep'd by \u0061\u0035 because the letter
+    a is associated with 0x0061 code unit, and the digit 5 is associated with 0x0035
+
+    A string object in Dart is a sequence of Unicode UTF-16 code units that are called
+    runes. Each string has the codeUnitAt(int index) function to get the 16-bit UTF-16
+    code unit at the given index. 
+  */
+  const string = 'Hi';
+  print(string.codeUnitAt(0));
+  print(string.codeUnitAt(1));
+  print('');
+
+  // Considering the above, I can also build the string from the codepoint with fromCharCode
+  print('${String.fromCharCode(72)}${String.fromCharCode(105)}');
+  print('');
+
+  /*From these examples, I can understand that 72 is the integer UTF-16 coe unit for the 
+    letter H and 105 instead is associated with the letter i. If I converted these to
+    hex, I could still use code points to build the string using the \u escape values
+  */
+  print('\u{0048}\u{0069}');
+
+  /*I can always use the runes property in Dart to return all of teh runes (code units)
+    as base ten integers. They can directly be used in the fromCharCode constructor to
+    then build the string, but if i want to use the \u escape character, then I need to
+    convert them into base 16 (hex)
+  */
+
+  // code points for the string 'Dart'
+  print(
+    'Dart'.runes.toList(),
+  ); // the .toList converts the interator result to a real list
+  print('');
+
+  // printing 'Dart' from its integer, base 10 code points
+  for (final c in 'Dart'.runes) {
+    print(String.fromCharCode(c));
+  }
+  print('');
+  // using the hex code points
+  print('\u{0044}');
+  print('\u{0061}');
+  print('\u{0072}');
+  print('\u{0074}');
+  print('');
+
+  /*Emojis can also be expressed using UTF-16. For example, the laughing one is \u{1f606}.
+    Runes are for low-level string manipulations and I'll hardly ever need to work with 
+    them.
+  */
+  print('\u{1f606}');
 }
