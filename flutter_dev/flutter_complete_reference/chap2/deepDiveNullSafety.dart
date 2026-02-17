@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 /*DEEP DIVE: NULL SAFETY IN DART
 Null safety is a major change (introduced in Dart 2.12) that replaced the old
 unsound optional type system with a sound static type system. Before diving into the 
@@ -198,6 +200,73 @@ void main() {
   without exceptions.
 
   TOP AND BOTTOM TYPES:
-  
+  I've previously seen that the Dart team moved Null outside the Object hierarchy to make
+  the whole type system null safe. However, Null is still associated to the type hierarchy
+  otherwise I wouldn't be able to use it 🤔. A TOP TYPE is the "highest" supertype in the
+  hierarchy while a BOTTOM TYPE is the "lowest" subtype in the hierarchy.
+
+  It is beneficial for a type system to have top and bottom types because they constrain the
+  hierarchy to a closed set where all entities are somehow linked together. As a consequence, it is
+  possible to implement an intelligent type inference system. Here is the  simplified diagram of
+  the null safe type system hierarchy:
+
+
+               
+               :=======> NULL =========================================================:
+      OBJECT?==:                    :======> FUTURE ===================================:==> NEVER
+               :                    :                    :=====> INT ========:=========:
+               :=======> OBJECT ====:======> NUMBER =====:                   :         :
+                                    :                    :=====> DOUBLE =====:         :
+                                    :                                                  :
+                                    :======> STRING ===================================:
+
+
+  With null safety, Object? is the TOP TYPE, meaning that everything in Dart is an Object?. The
+  BOTTOM TYPE is called Never. Notice that Null isn't an Object subtype anymore so there is no 
+  way BY DESIGN that, for example, a bool or an int could be null. A for more things for me to
+  keep in mind on this road to Dart Mastery:
+
+    • If I want to indicate that I want to allow a value of any type, I use Object? instead of
+      Object. Here's why:
+  */
+  Object? obj1 = null; // ok
+  Object? obj2 = 5; // ok
+
+  // Object obj3 = null; // Compile-time error: A value of type 'null' can't be assigned to a var of
+  // type 'object'
+  Object obj4 = 5; // ok
+
+  /*
+      As seen here, object? can be an int or null, while Object can be anything EXCEPT for null. In
+      other words, Object? means "anything" while Object means "anything that is non-nullable" 🤯🤯🤯
+
+    • In the rare case that I need a bottom type, I can use Never. It is a particular type, like void
+      or dynamic. The main reason why Never was created is to give a bottom type to the Dart type
+      system. In chapter 3 - Section 4 "Functions" I'll see a possible use-case for Never (which I 
+      kinda remember from past studies) but aside from that, there aren't many other relevant cases
+      where I need it. It's handy in the type system, for static analysis tools and other compiler-
+      related tasks. For the developer, it's not much use in practice.
+
+  Here's a final diagram that summarizes the main difference between teh old (non-null safe) and
+  new (null safe) types sytems in Dart:
+
+  WITHOUT NULL SAFETY:
+
+                    :======= ... =======:
+      OBJECT =======:                   :=======> NULL
+                    :======= ... =======:
+
+---------------------------------------------------------------------------------------------------
+
+  WITH NULL SAFETY:
+                     :======= NULL ====================================:===> NEVER
+      OBJECT? =======:                      :====== ... =======:       :
+                     :======= OBJECT =======:                  :=======:
+                                            :====== ... =======:    
+
+
+
+  The difference is even more visible now. In the null safe type system, Null stays outside of
+  the Object hierarchy so it's impossible BY DESIGN that null is assigned to an Object subtype.
   */
 }
